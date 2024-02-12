@@ -1,0 +1,36 @@
+<html lang="en">
+<head> <link rel="stylesheet" type="text/css" href="mystyle.css"> </head>
+<body>
+    <div class="container">
+        <h1 align="center"><u><b>Stopwatch</b></u></h1>
+        <p class="timer" id="timer" align="center">00:00:00</p>
+        <div class="buttons">
+            <button class="button" id="start">Start</button>
+            <button class="button" id="pause">Pause</button>
+            <button class="button" id="reset">Reset</button>
+            <button class="button" id="lap">Lap</button>
+        </div>
+        <ul class="laps" id="laps"></ul>
+    </div>
+    <script>
+        const timer = document.getElementById("timer");
+        const start = document.getElementById("start");
+        const pause = document.getElementById("pause");
+        const reset = document.getElementById("reset");
+        const lap = document.getElementById("lap");
+        const laps = document.getElementById("laps");   
+        let hours = 0, minutes = 0, seconds = 0, interval = null, status = "stopped";
+    
+        const updateTimer = () => timer.textContent = `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;   
+        const incrementTimer = () => (seconds === 59 ? (seconds = -1, (minutes === 59 ? (minutes = -1, hours++) : minutes++)) : seconds++) && updateTimer();  
+        const startTimer = () => status === "stopped" && (interval = setInterval(incrementTimer, 1000), status = "running");  
+        const pauseTimer = () => status === "running" && (clearInterval(interval), status = "stopped"); 
+        const resetTimer = () => (pauseTimer(), hours = minutes = seconds = 0, updateTimer(), laps.innerHTML = "");
+        const recordLap = () => status === "running" && laps.insertAdjacentHTML("beforeend", `<li class="lap">${timer.textContent}</li>`);
+ 
+        start.addEventListener("click", startTimer);
+        pause.addEventListener("click", pauseTimer);
+        reset.addEventListener("click", resetTimer);
+        lap.addEventListener("click", recordLap);
+    </script>
+</body></html>
